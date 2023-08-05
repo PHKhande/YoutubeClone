@@ -8,9 +8,9 @@ const Sidebar = () => {
 
   if (!isMenuOpen) return null;
 
-  const menuArray = ["Home", "Shorts", "Subscription", "Library", "History", "Home", "Shorts", "Subscription", "Library", "History"];
+  const menuArray = ["Home", "Shorts", "Subscription", "Library", "History", "Home", "Shorts", "Subscription", "Library", "History", "Shorts", "Subscription", "Library", "History"];
   return (
-    <div className=' col-span-1'>
+    <div className='col-span-2'>
       {
         menuArray.map( (item, index) => {
           return (
