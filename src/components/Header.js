@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { HAMBURGER_ICON_URL, YOUTUBE_LOGO, USER_LOGO } from "../Constants";
+import {
+  HAMBURGER_ICON_URL,
+  YOUTUBE_LOGO,
+  USER_LOGO,
+  SEARCH_VIDEOS_URL,
+} from "../Constants";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../redux/appSlice";
 import { cacheResult } from "../redux/searchSlice";
@@ -39,8 +44,14 @@ const Header = () => {
     const query = await JSONQuery.json();
 
     //we have to use searchQuery in [] because if we don't use, it will set every key as "searchQuery".
-    dispatch( cacheResult( { [searchQuery]: query[1] } ));
+    dispatch(cacheResult({ [searchQuery]: query[1] }));
     setSuggestions(query[1]);
+  };
+
+  const SearchWithKeyword = async (s) => {
+    const response = await fetch(SEARCH_VIDEOS_URL + s);
+    const searchVideos = await response.json();
+    console.log(searchVideos);
   };
 
   return (
@@ -70,7 +81,7 @@ const Header = () => {
           onBlur={() => setShowSuggestions(false)}
         ></input>
 
-        <button className="border border-gray-400 rounded-r-full py-2 px-4 bg-gray-200">
+        <button onClick={()=>{SearchWithKeyword(searchQuery)}} className="border border-gray-400 rounded-r-full py-2 px-4 bg-gray-200">
           🔍
         </button>
 
@@ -79,7 +90,12 @@ const Header = () => {
             <ul>
               {suggestions.map((s) => {
                 return (
-                  <li key={s} className="py-2 px-3  hover:bg-gray-200">
+                  <li
+                  
+                    onClick={()=> setSearchQuery(s)}
+                    key={s}
+                    className="py-2 px-3  hover:bg-gray-200"
+                  >
                     {" 🔍 " + s}
                   </li>
                 );
