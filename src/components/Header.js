@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from "react";
 
 import { HAMBURGER_ICON_URL, YOUTUBE_LOGO, USER_LOGO } from "../Constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../redux/appSlice";
+import { cacheResult } from "../redux/searchSlice";
 import { YOUTUBE_AUTOCOMPLETE_SEARCH_API } from "../Constants";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-
   const dispatch = useDispatch();
+
+  const searchQueryCache = useSelector((store) => store.search);
+
   const ChangeMenu = () => {
     dispatch(toggleMenu());
   };
 
   useEffect(() => {
     const timerId = setTimeout(() => {
-      getQueries();
+      if (searchQueryCache[searchQuery]) {
+        setSuggestions(searchQueryCache[searchQuery]);
+      } else {
+        getQueries();
+      }
     }, 300);
 
     return () => {
@@ -30,6 +37,9 @@ const Header = () => {
       YOUTUBE_AUTOCOMPLETE_SEARCH_API + searchQuery
     );
     const query = await JSONQuery.json();
+
+    //we have to use searchQuery in [] because if we don't use, it will set every key as "searchQuery".
+    dispatch( cacheResult( { [searchQuery]: query[1] } ));
     setSuggestions(query[1]);
   };
 
