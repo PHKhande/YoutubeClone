@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   const menuArray = ["Home", "Shorts", "Subscription", "Library", "History", "Home", "Shorts", "Subscription", "Library", "History", "Shorts", "Subscription", "Library", "History"];
   return (
-    <div className='col-span-2'>
+    <div>
       {
         menuArray.map( (item, index) => {
           return (
